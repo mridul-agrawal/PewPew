@@ -6,7 +6,12 @@ public class PlayerController : MonoBehaviour
 {
     
     public float speed = 0.01f;
+    public GameObject Bullet;
+    public Transform weaponPoint1;
+    public Transform weaponPoint2;
+
     private Rigidbody2D playerRigidBody;
+    private Coroutine firingRoutine = null;
 
     private void Awake()
     {
@@ -17,6 +22,11 @@ public class PlayerController : MonoBehaviour
     {
         HandlePlayerMovement();
         HandlePlayerRotation();
+    }
+
+    private void Update()
+    {
+        HandleShooting();
     }
 
     private void HandlePlayerMovement()
@@ -44,7 +54,27 @@ public class PlayerController : MonoBehaviour
         var dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
         var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle-90, Vector3.forward);
-//      transform.LookAt(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+    }
+
+    private void HandleShooting()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            firingRoutine = StartCoroutine(Fire());
+        } else if(Input.GetKeyUp(KeyCode.Space))
+        {
+            StopCoroutine(firingRoutine);
+        }
+    }
+
+    IEnumerator Fire()
+    {
+        while(true)
+        {
+            Instantiate(Bullet, weaponPoint1.position, weaponPoint1.rotation);
+            Instantiate(Bullet, weaponPoint2.position, weaponPoint2.rotation);
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
 }
