@@ -85,7 +85,6 @@ public class Asteroid : MonoBehaviour
 
         if(sizeToCreate == Size.Medium)
         {
-            Debug.Log("After Instantiating");
             half.AsteroidSprite.sprite = MediumSprites[Random.Range(0, MediumSprites.Length)];
             half.size = Size.Medium;
             Destroy(half.GetComponent<PolygonCollider2D>());

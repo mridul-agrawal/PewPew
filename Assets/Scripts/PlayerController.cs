@@ -8,9 +8,11 @@ public class PlayerController : MonoBehaviour
     public float speed = 0.01f;
     public float fireRate = 0.2f;
 
+    public GameManager gameManager;
     public GameObject Bullet;
     public Transform weaponPoint1;
     public Transform weaponPoint2;
+    public float respawnProtectionTime = 3.0f;
 
     private Rigidbody2D playerRigidBody;
     private Coroutine firingRoutine = null;
@@ -18,6 +20,12 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         playerRigidBody = GetComponent<Rigidbody2D>();
+    }
+
+    private void OnEnable()
+    {
+        gameObject.layer = LayerMask.NameToLayer("ignoreCollisions");
+        Invoke(nameof(TurnOnCollisions), respawnProtectionTime);
     }
 
     private void FixedUpdate()
@@ -88,8 +96,13 @@ public class PlayerController : MonoBehaviour
 
             gameObject.SetActive(false);
 
-
+            gameManager.PlayerDied();
         }
+    }
+
+    private void TurnOnCollisions()
+    {
+        gameObject.layer = LayerMask.NameToLayer("Default");
     }
 
 }
