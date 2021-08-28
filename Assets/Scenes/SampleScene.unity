@@ -250,7 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AsteroidPrefab: {fileID: 5510350994887514610, guid: 8800fc9d31f7db942894c230eee4382c, type: 3}
-  SpawnRate: 2
+  SpawnRate: 6
   SpawnAmount: 1
   SpawnDistance: 12
   TrajectoryVariance: 15

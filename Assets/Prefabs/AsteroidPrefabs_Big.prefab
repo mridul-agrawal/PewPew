@@ -10,11 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4809998663158404311}
   - component: {fileID: 4809998663158404308}
-  - component: {fileID: 4809998663158404309}
   - component: {fileID: 4809998663158404310}
   - component: {fileID: 5510350994887514610}
   - component: {fileID: -2429270219912733834}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AsteroidPrefabs_Big
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,45 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &4809998663158404309
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4809998663158404306}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.01, y: 0.84}
-    newSize: {x: 1.01, y: 0.84}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.38814476, y: -0.23555303}
-      - {x: 0.49055278, y: -0.03277663}
-      - {x: 0.507408, y: 0.009066626}
-      - {x: 0.24055278, y: 0.422408}
-      - {x: -0.345, y: 0.42}
-      - {x: -0.34573767, y: 0.41481605}
-      - {x: -0.47129047, y: 0.037960812}
-      - {x: -0.5170392, y: -0.101843014}
-      - {x: -0.22814475, y: -0.4151844}
-      - {x: -0.19630197, y: -0.40796056}
-      - {x: 0.10594152, y: -0.29664785}
-      - {x: 0.31122065, y: -0.32991695}
-      - {x: 0.3390299, y: -0.3336097}
-      - {x: 0.34756994, y: -0.3236938}
 --- !u!50 &4809998663158404310
 Rigidbody2D:
   serializedVersion: 4
@@ -158,12 +118,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a51403f63efcd49a7fbd80d4efb9f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
+  AsteroidPrefab: {fileID: 5510350994887514610}
+  BigSprites:
   - {fileID: 21300000, guid: 587cfc751249cf8429a138a0f861e3fd, type: 3}
   - {fileID: 21300000, guid: 451db6975e502f9479956bb151b73ca1, type: 3}
   - {fileID: 21300000, guid: 226aab90c1f78d34fb84b4f94502fe4f, type: 3}
   - {fileID: 21300000, guid: d24d217c2078bb24c9064679433189d4, type: 3}
+  MediumSprites:
+  - {fileID: 21300000, guid: 2dd4b372973758549b07a63372a39886, type: 3}
+  - {fileID: 21300000, guid: 3d62ecf924b9ff1479b5ced7f0beffc0, type: 3}
+  SmallSprites:
+  - {fileID: 21300000, guid: d28c2b13125a3d24880fc6a222239cf2, type: 3}
+  - {fileID: 21300000, guid: 299fb613d6542ee428ab17b9805a5843, type: 3}
   speed: 10
+  Strength: 100
 --- !u!114 &-2429270219912733834
 MonoBehaviour:
   m_ObjectHideFlags: 0
