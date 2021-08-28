@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     
     public float speed = 0.01f;
+    public float fireRate = 0.2f;
+
     public GameObject Bullet;
     public Transform weaponPoint1;
     public Transform weaponPoint2;
@@ -73,7 +75,20 @@ public class PlayerController : MonoBehaviour
         {
             Instantiate(Bullet, weaponPoint1.position, weaponPoint1.rotation);
             Instantiate(Bullet, weaponPoint2.position, weaponPoint2.rotation);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(fireRate);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Asteroid")
+        {
+            playerRigidBody.velocity = Vector3.zero;
+            playerRigidBody.angularVelocity = 0.0f;
+
+            gameObject.SetActive(false);
+
+
         }
     }
 

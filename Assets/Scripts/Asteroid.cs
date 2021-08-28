@@ -25,14 +25,14 @@ public class Asteroid : MonoBehaviour
     {
         AsteroidSprite = GetComponent<SpriteRenderer>();
         AsteroidRigidBody = GetComponent<Rigidbody2D>();
-    }
 
-    private void Start()
-    {
         AsteroidSprite.sprite = BigSprites[Random.Range(0, BigSprites.Length)];
-        gameObject.AddComponent<PolygonCollider2D>();
+        if(gameObject.GetComponent<PolygonCollider2D>() == null)
+        {
+            gameObject.AddComponent<PolygonCollider2D>();
+        }
         size = Size.Big;
-        transform.eulerAngles = new Vector3(0,0,Random.value * 360);
+        transform.eulerAngles = new Vector3(0, 0, Random.value * 360);
     }
 
     private void Update()
@@ -85,6 +85,7 @@ public class Asteroid : MonoBehaviour
 
         if(sizeToCreate == Size.Medium)
         {
+            Debug.Log("After Instantiating");
             half.AsteroidSprite.sprite = MediumSprites[Random.Range(0, MediumSprites.Length)];
             half.size = Size.Medium;
             Destroy(half.GetComponent<PolygonCollider2D>());
