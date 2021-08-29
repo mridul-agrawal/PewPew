@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a51403f63efcd49a7fbd80d4efb9f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 7842045734113384691, guid: 11a2512c319fb9948b49619b9ba41a0c, type: 3}
   BigSprites:
   - {fileID: 21300000, guid: 587cfc751249cf8429a138a0f861e3fd, type: 3}
   - {fileID: 21300000, guid: 451db6975e502f9479956bb151b73ca1, type: 3}

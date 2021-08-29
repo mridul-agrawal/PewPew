@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
+    public GameManager gameManager;
     public Sprite[] BigSprites;
     public Sprite[] MediumSprites;
     public Sprite[] SmallSprites;
@@ -64,7 +65,9 @@ public class Asteroid : MonoBehaviour
 
     private void BreakAsteroid()
     {
-        if(size == Size.Big)
+        FindObjectOfType<GameManager>().AsteroidDestroyed(transform.position);
+
+        if (size == Size.Big)
         {
             Split(Size.Medium);
             Split(Size.Medium);
