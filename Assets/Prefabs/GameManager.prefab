@@ -43,8 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5916acd616e02a4f8fa96fdae171c81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosion: {fileID: 1758072144977252290, guid: 7f4186780080aad43be98cdd54f7fad2, type: 3}
-  player: {fileID: 6800818878134121778, guid: ef48520401a68464fa33f94e604285ed, type: 3}
+  Scoretext: {fileID: 0}
+  explosion: {fileID: 0}
+  player: {fileID: 0}
   lives: 3
   respawnTime: 3
   Score: 0
