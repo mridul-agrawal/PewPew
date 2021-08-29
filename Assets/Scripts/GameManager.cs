@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     public void Quit()
     {
-
+        SceneManager.LoadScene(0);
     }
 
 }
