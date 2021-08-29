@@ -76,6 +76,7 @@ public class Asteroid : MonoBehaviour
             Split(Size.Small);
             Split(Size.Small);
         }
+        SoundManager.Instance.PlaySoundEffects2(SoundType.AsteroidExplosion);
         Destroy(gameObject);
     }
 

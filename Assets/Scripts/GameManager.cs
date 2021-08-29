@@ -55,11 +55,13 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
+        SoundManager.Instance.PlaySoundEffects2(SoundType.ButtonClick1);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void Quit()
     {
+        SoundManager.Instance.PlaySoundEffects2(SoundType.ButtonClick1);
         SceneManager.LoadScene(0);
     }
 

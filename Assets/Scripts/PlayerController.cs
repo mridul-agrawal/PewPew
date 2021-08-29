@@ -41,21 +41,42 @@ public class PlayerController : MonoBehaviour
 
     private void HandlePlayerMovement()
     {
-        if(Input.GetKey(KeyCode.W))
+
+        if (Input.GetKey(KeyCode.W))
         {
             transform.Translate(Vector2.up * speed);
+            if(!SoundManager.Instance.audioEffects.isPlaying)
+            {
+                SoundManager.Instance.PlaySoundEffects(SoundType.PlayerMove);
+            }
         }
         if (Input.GetKey(KeyCode.S))
         {
             transform.Translate(Vector2.down * speed);
+            if (!SoundManager.Instance.audioEffects.isPlaying)
+            {
+                SoundManager.Instance.PlaySoundEffects(SoundType.PlayerMove);
+            }
         }
         if (Input.GetKey(KeyCode.A))
         {
             transform.Translate(Vector2.left * speed);
+            if (!SoundManager.Instance.audioEffects.isPlaying)
+            {
+                SoundManager.Instance.PlaySoundEffects(SoundType.PlayerMove);
+            }
         }
         if (Input.GetKey(KeyCode.D))
         {
             transform.Translate(Vector2.right * speed);
+            if (!SoundManager.Instance.audioEffects.isPlaying)
+            {
+                SoundManager.Instance.PlaySoundEffects(SoundType.PlayerMove);
+            }
+        } 
+        if(!(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)))
+        {
+            SoundManager.Instance.StopSoundEffect();
         }
     }
 
@@ -83,6 +104,7 @@ public class PlayerController : MonoBehaviour
         {
             Instantiate(Bullet, weaponPoint1.position, weaponPoint1.rotation);
             Instantiate(Bullet, weaponPoint2.position, weaponPoint2.rotation);
+            SoundManager.Instance.PlaySoundEffects2(SoundType.PlayerShoot);
             yield return new WaitForSeconds(fireRate);
         }
     }
@@ -96,6 +118,7 @@ public class PlayerController : MonoBehaviour
 
             gameObject.SetActive(false);
 
+            SoundManager.Instance.PlaySoundEffects2(SoundType.PlayerDeath);
             gameManager.PlayerDied();
         }
     }
