@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
     public int damage = 10;
     private void Update()
     {
-        transform.Translate(Vector2.up * bulletSpeed);
+        transform.Translate(Vector2.up * Time.deltaTime * bulletSpeed);
     }
 
 }

@@ -1,54 +1,67 @@
-using System.Collections;
-using System.Collections.Generic;
+using PewPew.Audio;
+using System;
 using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
-    public GameManager gameManager;
+    // References:
     public Sprite[] BigSprites;
     public Sprite[] MediumSprites;
     public Sprite[] SmallSprites;
-
-    private enum Size
-    {
-        Big,
-        Medium,
-        Small
-    }
-    private Size size;
-    public float speed = 10;
-    public int Strength = 100;
-
     private SpriteRenderer AsteroidSprite;
     private Rigidbody2D AsteroidRigidBody;
 
+    private enum Size { Big, Medium, Small }
+    
+    // Variables:
+    private Size size;
+    [SerializeField] private float speed = 10;
+    [SerializeField] private int health = 100;
+
+    // Events:
+    public static event Action<Vector3> OnAsteroidDestroy;
+
+
     private void Awake()
+    {
+        SetReferences();
+        InitializeAsteroid();
+    }
+
+    // Sets references to components.
+    private void SetReferences()
     {
         AsteroidSprite = GetComponent<SpriteRenderer>();
         AsteroidRigidBody = GetComponent<Rigidbody2D>();
+    }
 
-        AsteroidSprite.sprite = BigSprites[Random.Range(0, BigSprites.Length)];
-        if(gameObject.GetComponent<PolygonCollider2D>() == null)
+    // Used to Initialise some properties of the asteroids.
+    private void InitializeAsteroid()
+    {
+        AsteroidSprite.sprite = BigSprites[UnityEngine.Random.Range(0, BigSprites.Length)];
+        if (gameObject.GetComponent<PolygonCollider2D>() == null)
         {
             gameObject.AddComponent<PolygonCollider2D>();
         }
         size = Size.Big;
-        transform.eulerAngles = new Vector3(0, 0, Random.value * 360);
+        transform.eulerAngles = new Vector3(0, 0, UnityEngine.Random.value * 360);
     }
 
     private void Update()
     {
-        if(Strength <= 0)
+        if(health <= 0)
         {
             BreakAsteroid();
         }
     }
 
+    // Adds force to the asteroid in given direction.
     public void SetTrajectory(Vector2 direction)
     {
         AsteroidRigidBody.AddForce(direction * speed);
     }
 
+    // Takes damage on collision with a bullet.
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Bullet")
@@ -58,14 +71,15 @@ public class Asteroid : MonoBehaviour
         }
     }
 
+    // decreases health according to the given value.
     private void TakeDamage(int damage)
     {
-        Strength -= damage;
+        health -= damage;
     }
 
     private void BreakAsteroid()
     {
-        FindObjectOfType<GameManager>().AsteroidDestroyed(transform.position);
+        OnAsteroidDestroy.Invoke(transform.position);
 
         if (size == Size.Big)
         {
@@ -83,27 +97,26 @@ public class Asteroid : MonoBehaviour
     private void Split(Size sizeToCreate)
     {
         Vector2 position = transform.position;
-        position += Random.insideUnitCircle * 0.5f;
+        position += UnityEngine.Random.insideUnitCircle * 0.5f;
 
         Asteroid half = Instantiate<Asteroid>(this, position, transform.rotation);
 
         if(sizeToCreate == Size.Medium)
         {
-            half.AsteroidSprite.sprite = MediumSprites[Random.Range(0, MediumSprites.Length)];
+            half.AsteroidSprite.sprite = MediumSprites[UnityEngine.Random.Range(0, MediumSprites.Length)];
             half.size = Size.Medium;
             Destroy(half.GetComponent<PolygonCollider2D>());
             half.gameObject.AddComponent<PolygonCollider2D>();
-            half.Strength = 60;
+            half.health = 60;
         } else if(sizeToCreate == Size.Small)
         {
-            half.AsteroidSprite.sprite = SmallSprites[Random.Range(0, SmallSprites.Length)];
+            half.AsteroidSprite.sprite = SmallSprites[UnityEngine.Random.Range(0, SmallSprites.Length)];
             half.size = Size.Small;
             Destroy(half.GetComponent<PolygonCollider2D>());
             half.gameObject.AddComponent<PolygonCollider2D>();
-            half.Strength = 20;
+            half.health = 20;
         }
 
-        half.SetTrajectory(Random.insideUnitSphere.normalized * speed);
+        half.SetTrajectory(UnityEngine.Random.insideUnitSphere.normalized * speed);
     }
-
 }

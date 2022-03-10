@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using PewPew.Audio;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -16,6 +14,11 @@ public class GameManager : MonoBehaviour
     public float respawnTime = 3.0f;
 
     public int Score = 0;
+
+    private void Start()
+    {
+        Asteroid.OnAsteroidDestroy += AsteroidDestroyed;
+    }
 
     public void PlayerDied()
     {

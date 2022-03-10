@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using PewPew.Audio;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -118,6 +118,7 @@ public class PlayerController : MonoBehaviour
 
             gameObject.SetActive(false);
 
+            SoundManager.Instance.StopSoundEffect();
             SoundManager.Instance.PlaySoundEffects2(SoundType.PlayerDeath);
             gameManager.PlayerDied();
         }
