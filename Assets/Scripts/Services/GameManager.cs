@@ -1,7 +1,9 @@
 using PewPew.Audio;
+using PewPew.Asteroids;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {

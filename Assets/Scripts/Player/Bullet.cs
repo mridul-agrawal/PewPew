@@ -2,13 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+/// <summary>
+/// A class for a player bullet gameObject.
+/// </summary>
+namespace PewPew.Player
 {
-    public float bulletSpeed;
-    public int damage = 10;
-    private void Update()
+    public class Bullet : MonoBehaviour
     {
-        transform.Translate(Vector2.up * Time.deltaTime * bulletSpeed);
-    }
+        [SerializeField]
+        private float bulletSpeed;
+        [SerializeField]
+        private int damage = 10;
 
+        public int Damage { get => damage; }
+
+        private void Update()
+        {
+            transform.Translate(Vector2.up * Time.deltaTime * bulletSpeed);
+        }
+
+    }
 }
