@@ -12,20 +12,14 @@ namespace PewPew.Player
     {
         // Variables:
         [SerializeField] private float speed = 0.01f;
-        [SerializeField] private float fireRate = 0.2f;
         [SerializeField] private float respawnTime = 3.0f;
         [SerializeField] private float respawnProtectionTime = 3.0f;
-        private Coroutine firingRoutine = null;
 
         // References:
-        [SerializeField] private GameObject Bullet;
-        [SerializeField] private Transform weaponPoint1;
-        [SerializeField] private Transform weaponPoint2;
         private Rigidbody2D playerRigidBody;
 
         // Events:
         public static event Action OnPlayerDeath;
-
 
         private void Awake()
         {
@@ -49,11 +43,6 @@ namespace PewPew.Player
         {
             HandlePlayerMovement();
             HandlePlayerRotation();
-        }
-
-        private void Update()
-        {
-            HandleShooting();
         }
 
         // Handles the player movement according to the input.
@@ -103,31 +92,6 @@ namespace PewPew.Player
             transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
         }
 
-        // Used to shoot bullets according to the input recieved.
-        private void HandleShooting()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                firingRoutine = StartCoroutine(Fire());
-            }
-            else if (Input.GetKeyUp(KeyCode.Space))
-            {
-                StopCoroutine(firingRoutine);
-            }
-        }
-
-        // Used to Instantiate bullets with the specified time interval.
-        IEnumerator Fire()
-        {
-            while (true)
-            {
-                Instantiate(Bullet, weaponPoint1.position, weaponPoint1.rotation);
-                Instantiate(Bullet, weaponPoint2.position, weaponPoint2.rotation);
-                SoundManager.Instance.PlaySoundEffects2(SoundType.PlayerShoot);
-                yield return new WaitForSeconds(fireRate);
-            }
-        }
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.tag == "Asteroid")
@@ -147,6 +111,5 @@ namespace PewPew.Player
             transform.position = Vector3.zero;
             gameObject.SetActive(true);
         }
-
     }
 }
