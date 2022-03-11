@@ -1,132 +1,152 @@
+using System;
 using System.Collections;
 using PewPew.Audio;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+namespace PewPew.Player
 {
-    
-    public float speed = 0.01f;
-    public float fireRate = 0.2f;
-
-    public GameManager gameManager;
-    public GameObject Bullet;
-    public Transform weaponPoint1;
-    public Transform weaponPoint2;
-    public float respawnProtectionTime = 3.0f;
-
-    private Rigidbody2D playerRigidBody;
-    private Coroutine firingRoutine = null;
-
-    private void Awake()
+    /// <summary>
+    /// This class is used to Control Player Ship.
+    /// </summary>
+    public class PlayerController : MonoBehaviour
     {
-        playerRigidBody = GetComponent<Rigidbody2D>();
-    }
+        // Variables:
+        [SerializeField] private float speed = 0.01f;
+        [SerializeField] private float fireRate = 0.2f;
+        [SerializeField] private float respawnTime = 3.0f;
+        [SerializeField] private float respawnProtectionTime = 3.0f;
+        private Coroutine firingRoutine = null;
 
-    private void OnEnable()
-    {
-        gameObject.layer = LayerMask.NameToLayer("ignoreCollisions");
-        Invoke(nameof(TurnOnCollisions), respawnProtectionTime);
-    }
+        // References:
+        [SerializeField] private GameObject Bullet;
+        [SerializeField] private Transform weaponPoint1;
+        [SerializeField] private Transform weaponPoint2;
+        private Rigidbody2D playerRigidBody;
 
-    private void FixedUpdate()
-    {
-        HandlePlayerMovement();
-        HandlePlayerRotation();
-    }
+        // Events:
+        public static event Action OnPlayerDeath;
 
-    private void Update()
-    {
-        HandleShooting();
-    }
 
-    private void HandlePlayerMovement()
-    {
-
-        if (Input.GetKey(KeyCode.W))
+        private void Awake()
         {
-            transform.Translate(Vector2.up * speed);
-            if(!SoundManager.Instance.audioEffects.isPlaying)
+            playerRigidBody = GetComponent<Rigidbody2D>();
+        }
+
+        private void OnEnable()
+        {
+            StartCoroutine(Initialize());
+        }
+
+        // This method is used to ignore collisions for some time after being enabled.
+        IEnumerator Initialize()
+        {
+            gameObject.layer = 7;
+            yield return new WaitForSeconds(respawnProtectionTime);
+            gameObject.layer = 0;
+        }
+
+        private void FixedUpdate()
+        {
+            HandlePlayerMovement();
+            HandlePlayerRotation();
+        }
+
+        private void Update()
+        {
+            HandleShooting();
+        }
+
+        // Handles the player movement according to the input.
+        private void HandlePlayerMovement()
+        {
+
+            if (Input.GetKey(KeyCode.W))
             {
-                SoundManager.Instance.PlaySoundEffects(SoundType.PlayerMove);
+                transform.Translate(Vector2.up * speed);
+                PlayMoveSound();
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                transform.Translate(Vector2.down * speed);
+                PlayMoveSound();
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                transform.Translate(Vector2.left * speed);
+                PlayMoveSound();
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                transform.Translate(Vector2.right * speed);
+                PlayMoveSound();
+            }
+            if (!(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)))
+            {
+                SoundManager.Instance.StopSoundEffect();
             }
         }
-        if (Input.GetKey(KeyCode.S))
+
+        // Used to play movement sound when needed.
+        private static void PlayMoveSound()
         {
-            transform.Translate(Vector2.down * speed);
             if (!SoundManager.Instance.audioEffects.isPlaying)
             {
                 SoundManager.Instance.PlaySoundEffects(SoundType.PlayerMove);
             }
         }
-        if (Input.GetKey(KeyCode.A))
+
+        // Used to rotate player ship.
+        private void HandlePlayerRotation()
         {
-            transform.Translate(Vector2.left * speed);
-            if (!SoundManager.Instance.audioEffects.isPlaying)
+            var dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+        }
+
+        // Used to shoot bullets according to the input recieved.
+        private void HandleShooting()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                SoundManager.Instance.PlaySoundEffects(SoundType.PlayerMove);
+                firingRoutine = StartCoroutine(Fire());
+            }
+            else if (Input.GetKeyUp(KeyCode.Space))
+            {
+                StopCoroutine(firingRoutine);
             }
         }
-        if (Input.GetKey(KeyCode.D))
+
+        // Used to Instantiate bullets with the specified time interval.
+        IEnumerator Fire()
         {
-            transform.Translate(Vector2.right * speed);
-            if (!SoundManager.Instance.audioEffects.isPlaying)
+            while (true)
             {
-                SoundManager.Instance.PlaySoundEffects(SoundType.PlayerMove);
+                Instantiate(Bullet, weaponPoint1.position, weaponPoint1.rotation);
+                Instantiate(Bullet, weaponPoint2.position, weaponPoint2.rotation);
+                SoundManager.Instance.PlaySoundEffects2(SoundType.PlayerShoot);
+                yield return new WaitForSeconds(fireRate);
             }
-        } 
-        if(!(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)))
-        {
-            SoundManager.Instance.StopSoundEffect();
         }
-    }
 
-    private void HandlePlayerRotation()
-    {
-        var dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
-        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(angle-90, Vector3.forward);
-    }
-
-    private void HandleShooting()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            firingRoutine = StartCoroutine(Fire());
-        } else if(Input.GetKeyUp(KeyCode.Space))
-        {
-            StopCoroutine(firingRoutine);
+            if (collision.gameObject.tag == "Asteroid")
+            {
+                playerRigidBody.velocity = Vector3.zero;
+                playerRigidBody.angularVelocity = 0.0f;
+                gameObject.SetActive(false);
+                SoundManager.Instance.StopSoundEffect();
+                SoundManager.Instance.PlaySoundEffects2(SoundType.PlayerDeath);
+                OnPlayerDeath.Invoke();
+            }
         }
-    }
 
-    IEnumerator Fire()
-    {
-        while(true)
+        internal IEnumerator Respawn()
         {
-            Instantiate(Bullet, weaponPoint1.position, weaponPoint1.rotation);
-            Instantiate(Bullet, weaponPoint2.position, weaponPoint2.rotation);
-            SoundManager.Instance.PlaySoundEffects2(SoundType.PlayerShoot);
-            yield return new WaitForSeconds(fireRate);
+            yield return new WaitForSeconds(respawnTime);
+            transform.position = Vector3.zero;
+            gameObject.SetActive(true);
         }
+
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.gameObject.tag == "Asteroid")
-        {
-            playerRigidBody.velocity = Vector3.zero;
-            playerRigidBody.angularVelocity = 0.0f;
-
-            gameObject.SetActive(false);
-
-            SoundManager.Instance.StopSoundEffect();
-            SoundManager.Instance.PlaySoundEffects2(SoundType.PlayerDeath);
-            gameManager.PlayerDied();
-        }
-    }
-
-    private void TurnOnCollisions()
-    {
-        gameObject.layer = LayerMask.NameToLayer("Default");
-    }
-
 }

@@ -2,19 +2,24 @@ using PewPew.Audio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LobbyManager : MonoBehaviour
+namespace PewPew.Services
 {
-
-    public void Play()
+    /// <summary>
+    /// This class is used for implementing UI for Game Lobby.
+    /// </summary>
+    public class LobbyManager : MonoBehaviour
     {
-        SceneManager.LoadScene(1);
-        SoundManager.Instance.PlaySoundEffects2(SoundType.ButtonClick1);
-    }
 
-    public void Quit()
-    {
-        SoundManager.Instance.PlaySoundEffects2(SoundType.ButtonClick2);
-        Application.Quit();
-    }
+        public void Play()
+        {
+            SceneManager.LoadScene(1);
+            SoundManager.Instance.PlaySoundEffects2(SoundType.ButtonClick1);
+        }
 
+        public void Quit()
+        {
+            SoundManager.Instance.PlaySoundEffects2(SoundType.ButtonClick2);
+            Application.Quit();
+        }
+    }
 }

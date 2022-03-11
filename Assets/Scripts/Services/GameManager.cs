@@ -1,73 +1,85 @@
 using PewPew.Audio;
 using PewPew.Asteroids;
+using PewPew.Player;
+using PewPew.VFX;
 using UnityEngine;
-using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
-
-public class GameManager : MonoBehaviour
+namespace PewPew.Services
 {
-    public CanvasRenderer GameOverPanel;
-    public TextMeshProUGUI Scoretext;
-    public TextMeshProUGUI LivesText;
-    public ParticleSystem explosion;
-    public PlayerController player;
-    public int lives = 3;
-    public float respawnTime = 3.0f;
-
-    public int Score = 0;
-
-    private void Start()
+    /// <summary>
+    /// Handles all the in game events and communicates between various services.
+    /// </summary>
+    public class GameManager : MonoBehaviour
     {
-        Asteroid.OnAsteroidDestroy += AsteroidDestroyed;
-    }
+        // References:
+        [SerializeField] private PlayerController player;
 
-    public void PlayerDied()
-    {
-        lives--;
-        LivesText.text = lives.ToString();
-        explosion.transform.position = player.transform.position;
-        explosion.Play();
+        // Variables:
+        [SerializeField] private int lives = 3;
 
-        if(lives<=0)
+
+        private void Start()
         {
-            GameOver();
-        } else
-        {
-            Invoke(nameof(Respawn), respawnTime);
+            AddListenersToEvents();
         }
-    }
 
-    public void AsteroidDestroyed(Vector3 position)
-    {
-        explosion.transform.position = position;
-        explosion.Play();
+        // Adds listeners to invocation list of events.
+        private void AddListenersToEvents()
+        {
+            Asteroid.OnAsteroidDestroy += AsteroidDestroyed;
+            PlayerController.OnPlayerDeath += PlayerDied;
+        }
 
-        Score += 10;
-        Scoretext.text = Score.ToString();
-    }
+        // Handles the player death logic when the event is invoked.
+        public void PlayerDied()
+        {
+            UIService.Instance.UpdateLivesText(--lives);
+            ParticleEffects.Instance.PlayExplosionAt(player.transform.position);
 
-    public void GameOver()
-    {
-        GameOverPanel.gameObject.SetActive(true);
-    }
+            if (lives <= 0)
+            {
+                UIService.Instance.ToggleGameOverPanel(true);
+            }
+            else
+            {
+                StartCoroutine(player.Respawn());
+            }
+        }
 
-    private void Respawn()
-    {
-        player.transform.position = Vector3.zero;
-        player.gameObject.SetActive(true);
-    }
+        // Handles the asteroid destroyed logic when the event is invoked.
+        public void AsteroidDestroyed(Vector3 position)
+        {
+            ParticleEffects.Instance.PlayExplosionAt(position);
+            ScoreService.IncrementScore(10);
+        }
 
-    public void Restart()
-    {
-        SoundManager.Instance.PlaySoundEffects2(SoundType.ButtonClick1);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+        // Restarts the game.
+        public void Restart()
+        {
+            SoundManager.Instance.PlaySoundEffects2(SoundType.ButtonClick1);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
 
-    public void Quit()
-    {
-        SoundManager.Instance.PlaySoundEffects2(SoundType.ButtonClick1);
-        SceneManager.LoadScene(0);
+        // Takes back to the Lobby Screen
+        public void Quit()
+        {
+            SoundManager.Instance.PlaySoundEffects2(SoundType.ButtonClick1);
+            SceneManager.LoadScene(0);
+        }
+
+        private void OnDestroy()
+        {
+            RemoveListenersFromEvents();
+        }
+
+        // Removes listeners from invocation list of events.
+        private void RemoveListenersFromEvents()
+        {
+            Asteroid.OnAsteroidDestroy -= AsteroidDestroyed;
+            PlayerController.OnPlayerDeath -= PlayerDied;
+        }
     }
 
 }
