@@ -26,6 +26,7 @@ namespace PewPew.Asteroids
 
         // Events:
         public static event Action<Vector3> OnAsteroidDestroy;
+        public static event Action<Bullet> OnBulletDestroy;
 
 
         private void Awake()
@@ -73,7 +74,7 @@ namespace PewPew.Asteroids
             if (collision.gameObject.tag == "Bullet")
             {
                 TakeDamage(collision.gameObject.GetComponent<Bullet>().Damage);
-                Destroy(collision.gameObject);
+                OnBulletDestroy?.Invoke(collision.GetComponent<Bullet>());
             }
         }
 

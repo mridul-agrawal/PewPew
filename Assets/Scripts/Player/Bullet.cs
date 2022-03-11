@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,5 @@ namespace PewPew.Player
         {
             transform.Translate(Vector2.up * Time.deltaTime * bulletSpeed);
         }
-
     }
 }

@@ -1,7 +1,9 @@
+using PewPew.Asteroids;
 using PewPew.Audio;
+using PewPew.Pooling;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 
 namespace PewPew.Player
 {
@@ -18,6 +20,13 @@ namespace PewPew.Player
         [SerializeField] private GameObject Bullet;
         [SerializeField] private Transform weaponPoint1;
         [SerializeField] private Transform weaponPoint2;
+        private ObjectPoolBullet objectPoolBullet;
+
+        private void Start()
+        {
+            objectPoolBullet = GetComponent<ObjectPoolBullet>();
+            Asteroid.OnBulletDestroy += ReturnBulletToPool;
+        }
 
         private void Update()
         {
@@ -42,11 +51,28 @@ namespace PewPew.Player
         {
             while (true)
             {
-                Instantiate(Bullet, weaponPoint1.position, weaponPoint1.rotation);
-                Instantiate(Bullet, weaponPoint2.position, weaponPoint2.rotation);
+                FireBulletAtPosition(weaponPoint1);
+                FireBulletAtPosition(weaponPoint2);
                 SoundManager.Instance.PlaySoundEffects2(SoundType.PlayerShoot);
                 yield return new WaitForSeconds(fireRate);
             }
         }
+
+        // Fires a bullet from the given position.
+        private void FireBulletAtPosition(Transform weaponPoint)
+        {
+            Bullet bullet1 = objectPoolBullet.GetBullet(Bullet);
+            bullet1.transform.position = weaponPoint.position;
+            bullet1.transform.rotation = weaponPoint.rotation;
+            bullet1.gameObject.SetActive(true);
+        }
+
+        // Disables and returns back given bullet to the pool.
+        private void ReturnBulletToPool(Bullet bulletToDestroy)
+        {
+            bulletToDestroy.gameObject.SetActive(false);
+            objectPoolBullet.ReturnItem(bulletToDestroy);
+        }
+
     }
 }

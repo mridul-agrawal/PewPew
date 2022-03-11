@@ -1784,6 +1784,18 @@ MonoBehaviour:
   Bullet: {fileID: 8444054134597343144, guid: 20e06f919b0bb30409f61a75d5298f46, type: 3}
   weaponPoint1: {fileID: 6800818877720813128}
   weaponPoint2: {fileID: 6800818877720813127}
+--- !u!114 &6800818877720813130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6800818877720813126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c6c5386ae8012649ad697aaa9c5c0f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7842045734195056537
 PrefabInstance:
   m_ObjectHideFlags: 0
