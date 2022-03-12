@@ -4,7 +4,15 @@
 <hr>
 
 # ScreenShots
-
+<p align="center">
+<img src="Attachments/S1.png"> &nbsp&nbsp&nbsp&nbsp
+</p>
+<p align="center">
+<img src="Attachments/S2.png"> &nbsp&nbsp&nbsp&nbsp
+</p>
+<p align="center">
+<img src="Attachments/S3.png"> &nbsp&nbsp&nbsp&nbsp
+</p>
 <hr>
 
 ### Design Patterns used 
