@@ -1,5 +1,5 @@
 # PewPew
-This is a 2D Space Shooter game similar to asteroids which I have created in Unity game engine. 
+### This is a fast paced 2D Space Shooter game similar to asteroids which I have created in Unity game engine. 
 
 <hr>
 
